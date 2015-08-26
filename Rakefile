@@ -7,6 +7,11 @@ task :clean do
     system("rm -f *.gem")
 end
 
+desc "Test example project"
+task :ex => :install do
+    system("bin/djinni_proj.rb")
+end
+
 desc "Build gem"
 task :gem do
     system("chmod -R u=rwX,go=rX lib")
@@ -16,11 +21,6 @@ end
 desc "Build and install gem"
 task :install => :gem do
     system("gem install djinni*.gem")
-end
-
-desc "Test user input"
-task :sample => :install do
-    system("sample/djinni_proj.rb")
 end
 
 desc "Run tests"
