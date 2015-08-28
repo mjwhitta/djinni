@@ -10,6 +10,8 @@ provides tab completion.
 
 ## Example project
 
+### Simple
+
 ```ruby
 #!/usr/bin/env ruby
 
@@ -18,6 +20,26 @@ require "djinni"
 djinni = Djinni.new
 djinni.load_wishes("/path/to/wishes/dir")
 djinni.prompt
+```
+
+### Advanced
+
+```ruby
+#!/usr/bin/env ruby
+
+require "djinni"
+require "io/console"
+
+djinni = Djinni.new
+djinni.load_wishes("/path/to/wishes/dir")
+
+# Implement custom prompt below
+# Can be used with curses or whatever you want
+buffer = ""
+loop do
+    buffer = djinni.grant_wish(buffer + STDIN.getch)
+    # Display new buffer
+end
 ```
 
 ## TODO

@@ -10,6 +10,6 @@ Gem::Specification.new do |s|
     s.authors = [ "Miles Whittaker" ]
     s.email = "mjwhitta@gmail.com"
     s.files = Dir["lib/*.rb"]
-    s.homepage = "http://rubygems.org/gems/djinni"
+    s.homepage = "http://mjwhitta.github.io/djinni"
     s.license = "GPL-3.0"
 end
