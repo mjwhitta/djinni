@@ -52,3 +52,4 @@ end
 ## TODO
 
 - [ ] Left/Right arrow keys
+- [ ] RDoc
