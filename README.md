@@ -42,6 +42,12 @@ loop do
 end
 ```
 
+## Links
+
+- [Homepage](http://mjwhitta.github.io/djinni)
+- [Source](https://gitlab.com/mjwhitta/djinni)
+- [Mirror](https://github.com/mjwhitta/djinni)
+
 ## TODO
 
 - [ ] Left/Right arrow keys
