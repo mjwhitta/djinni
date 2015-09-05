@@ -10,7 +10,7 @@ class Exit
 end
 
 class Djinni
-    def grant_wish(input)
+    def grant_wish(input, env = {})
         return "" if (input.nil? || input.empty?)
 
         case input[-1]
@@ -30,7 +30,7 @@ class Djinni
                 name, args = input.split(" ", 2)
                 return input if (!@wishes.has_key?(name))
                 wish = @wishes[name]
-                return "#{name} #{wish.tab_complete(args)}"
+                return "#{name} #{wish.tab_complete(args, env)}"
             else
                 wishes = @wishes.keys
                 wishes.push("help")
@@ -66,7 +66,7 @@ class Djinni
 
             @wishes.sort.map do |aliaz, wish|
                 if (aliaz == name)
-                    wish.execute(args)
+                    wish.execute(args, env)
                     return ""
                 end
             end

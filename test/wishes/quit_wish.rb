@@ -9,11 +9,11 @@ class QuitWish < DjinniWish
         return "Exit"
     end
 
-    def execute(args)
+    def execute(args, env = {})
         exit 0
     end
 
-    def tab_complete(input)
+    def tab_complete(input, env = {})
         return input
     end
 end

@@ -9,11 +9,11 @@ class LSWish < DjinniWish
         return "List directory"
     end
 
-    def execute(args)
+    def execute(args, env = {})
         puts %x(ls #{args})
     end
 
-    def tab_complete(input)
+    def tab_complete(input, env = {})
         included = input.split(" ")
         completions = Array.new
         completions.push("-l")
