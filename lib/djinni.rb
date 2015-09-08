@@ -55,7 +55,7 @@ class Djinni
             name, args = input.split(" ", 2)
 
             if ((name == "help") || (name == "?"))
-                print_help
+                print_help(args)
                 return ""
             end
 
@@ -159,9 +159,23 @@ class Djinni
         @loaded_from.push(dir)
     end
 
-    def print_help
-        @wishes.sort.map do |aliaz, wish|
-            puts "#{aliaz}\t#{wish.description}"
+    def print_help(name = nil)
+        if (name.nil?)
+            @wishes.sort.map do |aliaz, wish|
+                puts "#{aliaz}\t#{wish.description}"
+            end
+        elsif (name.split(" ").length > 1)
+            puts "help [wish]"
+            puts "\tPrint usage for specified wish. If no wish is"
+            puts "\tspecified, print description of all wishes."
+        else
+            @wishes.sort.map do |aliaz, wish|
+                if (aliaz == name)
+                    wish.usage
+                    return
+                end
+            end
+            puts "Wish #{name} not found!"
         end
     end
 

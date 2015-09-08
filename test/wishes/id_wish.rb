@@ -16,6 +16,11 @@ class IDWish < DjinniWish
     def tab_complete(input, env = {})
         return input
     end
+
+    def usage
+        puts aliases.join(", ")
+        puts "\t#{description}."
+    end
 end
 
 class WhoamiWish < DjinniWish
@@ -33,5 +38,10 @@ class WhoamiWish < DjinniWish
 
     def tab_complete(input, env = {})
         return input
+    end
+
+    def usage
+        puts aliases.join(", ")
+        puts "\t#{description}."
     end
 end

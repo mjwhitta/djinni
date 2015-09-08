@@ -25,4 +25,10 @@ class DjinniWish
             "tab_complete() not implemented!"
         )
     end
+
+    def usage
+        raise InterfaceNotImplementedError.new(
+            "usage() not implemented!"
+        )
+    end
 end

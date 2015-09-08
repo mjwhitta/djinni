@@ -6,7 +6,7 @@ class LSWish < DjinniWish
     end
 
     def description
-        return "List directory"
+        return "List directory contents"
     end
 
     def execute(args, env = {})
@@ -40,5 +40,10 @@ class LSWish < DjinniWish
         puts
         puts completions.sort
         return input
+    end
+
+    def usage
+        puts "#{aliases.join(", ")} [-l] [dir1/file1]..[dirN/fileN]"
+        puts "\t#{description}."
     end
 end
