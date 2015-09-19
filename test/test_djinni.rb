@@ -13,6 +13,10 @@ class DjinniTest < Minitest::Test
         assert_equal(@djinni.grant_wish("foobarr\x7F"), "foobar")
     end
 
+    def test_control_c
+        assert_empty(@djinni.grant_wish("foobar\x03"))
+    end
+
     def test_incomplete_wish
         assert_equal(@djinni.grant_wish("who"), "who")
     end

@@ -37,8 +37,10 @@ djinni.load_wishes("/path/to/wishes/dir")
 # Can be used with curses or whatever you want
 buffer = ""
 loop do
+    # Display buffer
+
+    # Get new buffer
     buffer = djinni.grant_wish(buffer + STDIN.getch)
-    # Display new buffer
 end
 ```
 

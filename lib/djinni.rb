@@ -2,16 +2,16 @@ require "io/console"
 require "pathname"
 require "terminfo"
 
+require_relative "djinni_exit"
 require_relative "djinni_wish"
-
-class Exit
-    GOOD = 0
-    UNKNOWN_WISH = 1
-end
 
 class Djinni
     def grant_wish(input, env = {})
         return "" if (input.nil? || input.empty?)
+
+        env["djinni"] = self
+        env["djinni_history"] = @history
+        env["djinni_wishes"] = @wishes
 
         case input[-1]
         when "\x03" # ^C
@@ -33,8 +33,6 @@ class Djinni
                 return "#{name} #{wish.tab_complete(args, env)}"
             else
                 wishes = @wishes.keys
-                wishes.push("help")
-                wishes.push("history")
                 wishes.sort.each do |wish|
                     if (wish.start_with?(input))
                         return wish
@@ -47,29 +45,16 @@ class Djinni
             puts if (@interactive)
             return "" if (input.empty?)
 
-            # Only keep newest wish if repeat
-            @history.delete(input)
-            @history.push(input)
-            @hist_index = nil
-
             name, args = input.split(" ", 2)
-
-            if ((name == "help") || (name == "?"))
-                print_help(args)
-                return ""
-            end
-
-            if ((name == "history") || (name == "hist"))
-                print_history
-                return ""
-            end
 
             @wishes.sort.map do |aliaz, wish|
                 if (aliaz == name)
                     wish.execute(args, env)
+                    store_history(input)
                     return ""
                 end
             end
+            store_history(input)
             return nil
         when "\e" # Arrow keys
             code = "\e"
@@ -93,10 +78,10 @@ class Djinni
                     return ""
                 end
             when "\e[C" # Right arrow
-                # TODO maybe
+                # TODO maybe implement right arrow
                 return input[0..-2]
             when "\e[D" # Left arrow
-                # TODO maybe
+                # TODO maybe implement left arrow
                 return input[0..-2]
             else
                 return input[0..-2]
@@ -120,6 +105,41 @@ class Djinni
                 @width = TermInfo.screen_size[1]
             end
         )
+
+        load_builtins
+    end
+
+    def load_builtins
+        builtins = {
+            "help": "DjinniHelpWish",
+            "history": "DjinniHistoryWish",
+            "quit": "DjinniQuitWish"
+        }
+
+        builtins.each do |file, wish|
+            require_relative "builtin/#{file}"
+            load_wish(wish)
+        end
+    end
+
+    def load_wish(clas)
+        return if (clas.nil?)
+        clas.strip!
+        return if (clas.empty?)
+
+        wish = nil
+        begin
+            wish = Object::const_get(clas).new
+        rescue NameError => e
+            puts "Unknown wish class #{clas}!"
+            exit DjinniExit::UNKNOWN_WISH
+        end
+
+        return if (wish.nil?)
+
+        wish.aliases.each do |aliaz|
+            @wishes[aliaz] = wish
+        end
     end
 
     def load_wishes(dir)
@@ -136,53 +156,11 @@ class Djinni
                 \grep -E "class .* \< DjinniWish" #{file} | \
                     awk '{print $2}'
             ).each_line do |clas|
-                next if (clas.nil?)
-                clas.strip!
-                next if (clas.empty?)
-
-                wish = nil
-                begin
-                    wish = Object::const_get(clas).new
-                rescue NameError => e
-                    puts "Unknown wish class #{clas}!"
-                    exit Exit::UNKNOWN_WISH
-                end
-
-                next if (wish.nil?)
-
-                wish.aliases.each do |aliaz|
-                    @wishes[aliaz] = wish
-                end
+                load_wish(clas)
             end
         end
 
         @loaded_from.push(dir)
-    end
-
-    def print_help(name = nil)
-        if (name.nil?)
-            @wishes.sort.map do |aliaz, wish|
-                puts "#{aliaz}\t#{wish.description}"
-            end
-        elsif (name.split(" ").length > 1)
-            puts "help [wish]"
-            puts "\tPrint usage for specified wish. If no wish is"
-            puts "\tspecified, print description of all wishes."
-        else
-            @wishes.sort.map do |aliaz, wish|
-                if (aliaz == name)
-                    wish.usage
-                    return
-                end
-            end
-            puts "Wish #{name} not found!"
-        end
-    end
-
-    def print_history
-        @history.each do |wish|
-            puts wish
-        end
     end
 
     def prompt(prompt_sym = "$ ")
@@ -217,5 +195,13 @@ class Djinni
                 return
             end
         end
+    end
+
+    def store_history(input)
+        # Only keep newest wish if repeat
+        # @history.delete(input)
+
+        @history.push(input)
+        @hist_index = nil
     end
 end

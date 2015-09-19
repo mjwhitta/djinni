@@ -1,16 +1,16 @@
 require "djinni"
 
-class Wish < DjinniWish
+class DjinniQuitWish < DjinniWish
     def aliases
-        return [ "quit" ]
+        return [ "bye", "exit", "q", "quit" ]
     end
 
     def description
-        return "Quit with exit status 7"
+        return "Quit"
     end
 
     def execute(args, env = {})
-        exit 7
+        exit 0
     end
 
     def tab_complete(input, env = {})
