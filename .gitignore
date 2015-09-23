@@ -1,5 +1,2 @@
-*.swp
-tags
-.tags.sh
 Gemfile.lock
 *.gem
