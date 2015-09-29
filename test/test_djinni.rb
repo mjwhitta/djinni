@@ -7,6 +7,9 @@ class DjinniTest < Minitest::Test
     def setup
         @djinni = Djinni.new
         @djinni.load_wishes(Pathname.new("test/wishes").expand_path)
+
+        # Hide stdout
+        $stdout = StringIO.new
     end
 
     def test_backspace
