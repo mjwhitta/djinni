@@ -110,16 +110,7 @@ class Djinni
     end
 
     def load_builtins
-        builtins = {
-            "help": "DjinniHelpWish",
-            "history": "DjinniHistoryWish",
-            "quit": "DjinniQuitWish"
-        }
-
-        builtins.each do |file, wish|
-            require_relative "builtin/#{file}"
-            load_wish(wish)
-        end
+        load_wishes("#{File.dirname(__FILE__)}/builtin")
     end
 
     def load_wish(clas)
