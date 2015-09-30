@@ -14,13 +14,13 @@ class DjinniWish
         )
     end
 
-    def execute(args, env = {})
+    def execute(args, djinni_env = {})
         raise InterfaceNotImplementedError.new(
             "execute() not implemented!"
         )
     end
 
-    def tab_complete(input, env = {})
+    def tab_complete(input, djinni_env = {})
         raise InterfaceNotImplementedError.new(
             "tab_complete() not implemented!"
         )

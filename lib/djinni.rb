@@ -7,12 +7,12 @@ require "terminfo"
 class Djinni
     include DjinniError
 
-    def grant_wish(input, env = {})
+    def grant_wish(input, djinni_env = {})
         return "" if (input.nil? || input.empty?)
 
-        env["djinni"] = self
-        env["djinni_history"] = @history
-        env["djinni_wishes"] = @wishes
+        djinni_env["djinni"] = self
+        djinni_env["djinni_history"] = @history
+        djinni_env["djinni_wishes"] = @wishes
 
         case input[-1]
         when "\x03" # ^C
@@ -30,8 +30,10 @@ class Djinni
             if (input.include?(" "))
                 name, args = input.split(" ", 2)
                 return input if (!@wishes.has_key?(name))
+
                 wish = @wishes[name]
-                return "#{name} #{wish.tab_complete(args, env)}"
+                complete = wish.tab_complete(args, djinni_env)
+                return "#{name} #{complete}"
             else
                 wishes = @wishes.keys
                 wishes.sort.each do |wish|
@@ -50,7 +52,7 @@ class Djinni
 
             @wishes.sort.map do |aliaz, wish|
                 if (aliaz == name)
-                    wish.execute(args, env)
+                    wish.execute(args, djinni_env)
                     store_history(input)
                     return ""
                 end
@@ -107,10 +109,6 @@ class Djinni
             end
         )
 
-        load_builtins
-    end
-
-    def load_builtins
         load_wishes("#{File.dirname(__FILE__)}/builtin")
     end
 
@@ -132,6 +130,7 @@ class Djinni
             @wishes[aliaz] = wish
         end
     end
+    private :load_wish
 
     def load_wishes(dir)
         return if @loaded_from.include?(dir)
@@ -152,11 +151,13 @@ class Djinni
         @loaded_from.push(dir)
     end
 
-    def prompt(prompt_sym = "$ ")
+    def prompt(djinni_env = {}, prompt_sym = "$ ")
         @interactive = true
 
+        djinni_env["prompt_sym"] = prompt_sym
         buffer = ""
         loop do
+            prompt_sym = djinni_env["prompt_sym"]
             blank_line = Array.new(@width, " ").join
             fill_len = @width - prompt_sym.length - buffer.length + 1
 
@@ -172,7 +173,7 @@ class Djinni
             print "\r#{prompt_sym}#{buffer}"
 
             # Process input
-            buffer = grant_wish(buffer + STDIN.getch)
+            buffer = grant_wish(buffer + STDIN.getch, djinni_env)
 
             if (buffer.nil?)
                 puts "Wish not found!"
@@ -193,4 +194,5 @@ class Djinni
         @history.push(input)
         @hist_index = nil
     end
+    private :store_history
 end

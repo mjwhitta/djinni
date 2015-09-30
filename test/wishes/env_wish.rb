@@ -1,16 +1,17 @@
 require "djinni"
+require "json"
 
-class DjinniQuitWish < DjinniWish
+class EnvWish < DjinniWish
     def aliases
-        return [ "bye", "exit", "q", "quit" ]
+        return [ "env" ]
     end
 
     def description
-        return "Quit"
+        return "Show djinni environment"
     end
 
     def execute(args, djinni_env = {})
-        exit 0
+        puts JSON.pretty_generate(djinni_env)
     end
 
     def tab_complete(input, djinni_env = {})
@@ -18,7 +19,7 @@ class DjinniQuitWish < DjinniWish
     end
 
     def usage
-        puts aliases.join(", ")
+        puts "#{aliases.join(", ")}"
         puts "\t#{description}."
     end
 end

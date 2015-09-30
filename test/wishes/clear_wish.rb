@@ -9,11 +9,11 @@ class ClearWish < DjinniWish
         return "Clear the screen"
     end
 
-    def execute(args, env = {})
+    def execute(args, djinni_env = {})
         system("clear")
     end
 
-    def tab_complete(input, env = {})
+    def tab_complete(input, djinni_env = {})
         return input
     end
 

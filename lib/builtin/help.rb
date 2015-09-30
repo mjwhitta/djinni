@@ -9,13 +9,14 @@ class DjinniHelpWish < DjinniWish
         return "Show helpful information for a wish or wishes"
     end
 
-    def execute(args, env = {})
+    def execute(args, djinni_env = {})
+        wishes = djinni_env["djinni_wishes"].sort
         if (args.nil? || args.empty?)
-            env["djinni_wishes"].sort.map do |aliaz, wish|
+            wishes.map do |aliaz, wish|
                 puts "#{aliaz}\t#{wish.description}"
             end
         elsif (args.split(" ").length == 1)
-            env["djinni_wishes"].sort.map do |aliaz, wish|
+            wishes.map do |aliaz, wish|
                 if (aliaz == args)
                     wish.usage
                     return
@@ -27,7 +28,7 @@ class DjinniHelpWish < DjinniWish
         end
     end
 
-    def tab_complete(input, env = {})
+    def tab_complete(input, djinni_env = {})
         return input
     end
 

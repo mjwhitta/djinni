@@ -9,11 +9,11 @@ class IDWish < DjinniWish
         return "Show uid, gid, and groups"
     end
 
-    def execute(args, env = {})
+    def execute(args, djinni_env = {})
         puts %x(id #{args})
     end
 
-    def tab_complete(input, env = {})
+    def tab_complete(input, djinni_env = {})
         return input
     end
 
@@ -32,11 +32,11 @@ class WhoamiWish < DjinniWish
         return "Show username"
     end
 
-    def execute(args, env = {})
+    def execute(args, djinni_env = {})
         puts %x(whoami #{args})
     end
 
-    def tab_complete(input, env = {})
+    def tab_complete(input, djinni_env = {})
         return input
     end
 

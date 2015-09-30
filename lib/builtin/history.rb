@@ -9,9 +9,9 @@ class DjinniHistoryWish < DjinniWish
         return "Show history or execute commands from history"
     end
 
-    def execute(args, env = {})
-        djinni = env["djinni"]
-        history = env["djinni_history"]
+    def execute(args, djinni_env = {})
+        djinni = djinni_env["djinni"]
+        history = djinni_env["djinni_history"]
 
         case args
         when nil, ""
@@ -34,8 +34,8 @@ class DjinniHistoryWish < DjinniWish
         end
     end
 
-    def tab_complete(input, env = {})
-        history = env["djinni_history"]
+    def tab_complete(input, djinni_env = {})
+        history = djinni_env["djinni_history"]
 
         included = input.split(" ")
         completions = (0...history.length).to_a
