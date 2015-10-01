@@ -24,7 +24,10 @@ class DjinniHistoryWish < DjinniWish
             args.split(" ").each do |arg|
                 index = arg.to_i
                 if ((index >= 0) && (index < history.length))
-                    djinni.grant_wish("#{history[index]}\n")
+                    djinni.grant_wish(
+                        "#{history[index]}\n",
+                        djinni_env
+                    )
                 else
                     puts "Index out of bounds"
                 end
