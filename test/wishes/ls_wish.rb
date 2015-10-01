@@ -15,14 +15,10 @@ class LSWish < DjinniWish
 
     def tab_complete(input, djinni_env = {})
         included = input.split(" ")
-        completions = Array.new
-        completions.push("-l")
-        Dir["*"].each do |item|
-            completions.push(item)
-        end
-        included.each do |item|
-            completions.delete(item)
-        end
+        completions = Dir["*"].delete_if do |item|
+            included.include?(item)
+        end.sort
+        completions.insert(0, "-l")
 
         if (input.empty? || input.end_with?(" "))
             puts
@@ -30,7 +26,7 @@ class LSWish < DjinniWish
             return input
         end
 
-        completions.sort.each do |item|
+        completions.each do |item|
             if (item.downcase.start_with?(included[-1].downcase))
                 included[-1] = item
                 return included.join(" ")
@@ -38,7 +34,7 @@ class LSWish < DjinniWish
         end
 
         puts
-        puts completions.sort
+        puts completions
         return input
     end
 
