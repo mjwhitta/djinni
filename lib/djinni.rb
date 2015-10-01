@@ -151,18 +151,18 @@ class Djinni
         @loaded_from.push(dir)
     end
 
-    def prompt(djinni_env = {}, prompt_sym = "$ ")
+    def prompt(djinni_env = {}, djinni_prompt = "$ ")
         @interactive = true
 
-        djinni_env["prompt_sym"] = prompt_sym
-        buffer = ""
+        djinni_env["djinni_prompt"] = djinni_prompt
+        buff = ""
         loop do
-            prompt_sym = djinni_env["prompt_sym"]
+            djinni_prompt = djinni_env["djinni_prompt"]
             blank_line = Array.new(@width, " ").join
-            fill_len = @width - prompt_sym.length - buffer.length + 1
+            fill_len = @width - djinni_prompt.length - buff.length + 1
 
             # Handle long line-wrapped prompts
-            lines = (prompt_sym.length + buffer.length) / @width
+            lines = (djinni_prompt.length + buff.length) / @width
             lines.times do
                 print "\r#{blank_line}"
                 print "\e[F"
@@ -170,18 +170,18 @@ class Djinni
 
             # Redisplay prompt
             print "\r#{blank_line}"
-            print "\r#{prompt_sym}#{buffer}"
+            print "\r#{djinni_prompt}#{buff}"
 
             # Process input
-            buffer = grant_wish(buffer + STDIN.getch, djinni_env)
+            buff = grant_wish(buff + STDIN.getch, djinni_env)
 
-            if (buffer.nil?)
+            if (buff.nil?)
                 puts "Wish not found!"
-                buffer = ""
+                buff = ""
             end
 
             # Exit on ^D
-            if (buffer == "\x04")
+            if (buff == "\x04")
                 return
             end
         end
