@@ -38,7 +38,7 @@ class Djinni
                 wishes = @wishes.keys
                 wishes.sort.each do |wish|
                     if (wish.start_with?(input))
-                        return wish
+                        return "#{wish} "
                     end
                 end
                 return input
