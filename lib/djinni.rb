@@ -67,11 +67,12 @@ class Djinni
 
             case code
             when "\e[A" # Up arrow
+                return "" if (@history.empty?)
                 @hist_index = @history.size if (@hist_index.nil?)
                 @hist_index = 1 if (@hist_index == 0)
                 @hist_index -= 1
                 return @history[@hist_index]
-            when "\e[B" # Up arrow
+            when "\e[B" # Down arrow
                 @hist_index = @history.size if (@hist_index.nil?)
                 @hist_index += 1
                 if (@hist_index < @history.size)
