@@ -2,7 +2,7 @@ require "djinni"
 
 class LSWish < DjinniWish
     def aliases
-        return [ "ls", "dir" ]
+        return [ "dir", "ls" ]
     end
 
     def description
