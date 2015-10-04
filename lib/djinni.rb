@@ -32,7 +32,15 @@ class Djinni
                 return input if (!@wishes.has_key?(name))
 
                 wish = @wishes[name]
-                complete = wish.tab_complete(args, djinni_env)
+                complete = ""
+                begin
+                    complete = wish.tab_complete(args, djinni_env)
+                rescue SystemExit => e
+                    raise e
+                rescue Exception => e
+                    puts
+                    puts e.message
+                end
                 return "#{name} #{complete}"
             else
                 wishes = @wishes.keys
@@ -52,7 +60,13 @@ class Djinni
 
             @wishes.sort.map do |aliaz, wish|
                 if (aliaz == name)
-                    wish.execute(args, djinni_env)
+                    begin
+                        wish.execute(args, djinni_env)
+                    rescue SystemExit => e
+                        raise e
+                    rescue Exception => e
+                        puts e.message
+                    end
                     store_history(input)
                     return ""
                 end
