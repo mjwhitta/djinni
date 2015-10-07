@@ -13,10 +13,6 @@ class IDWish < DjinniWish
         puts %x(id #{args})
     end
 
-    def tab_complete(input, djinni_env = {})
-        return input
-    end
-
     def usage
         puts aliases.join(", ")
         puts "\t#{description}."
@@ -34,10 +30,6 @@ class WhoamiWish < DjinniWish
 
     def execute(args, djinni_env = {})
         puts %x(whoami #{args})
-    end
-
-    def tab_complete(input, djinni_env = {})
-        return input
     end
 
     def usage

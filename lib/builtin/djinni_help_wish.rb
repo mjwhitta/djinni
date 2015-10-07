@@ -43,6 +43,7 @@ class DjinniHelpWish < DjinniWish
     end
 
     def tab_complete(input, djinni_env = {})
+        # TODO
         return input
     end
 

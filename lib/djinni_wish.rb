@@ -21,9 +21,7 @@ class DjinniWish
     end
 
     def tab_complete(input, djinni_env = {})
-        raise InterfaceNotImplementedError.new(
-            "tab_complete() not implemented!"
-        )
+        return input
     end
 
     def usage

@@ -13,10 +13,6 @@ class ClearWish < DjinniWish
         system("clear")
     end
 
-    def tab_complete(input, djinni_env = {})
-        return input
-    end
-
     def usage
         puts aliases.join(", ")
         puts "\t#{description}."
