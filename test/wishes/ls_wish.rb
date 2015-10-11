@@ -1,6 +1,6 @@
 require "djinni"
 
-class LSWish < DjinniWish
+class LSWish < Djinni::Wish
     def aliases
         return [ "dir", "ls" ]
     end

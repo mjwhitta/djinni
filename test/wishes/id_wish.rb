@@ -1,6 +1,6 @@
 require "djinni"
 
-class IDWish < DjinniWish
+class IDWish < Djinni::Wish
     def aliases
         return [ "id", "me" ]
     end
@@ -19,7 +19,7 @@ class IDWish < DjinniWish
     end
 end
 
-class WhoamiWish < DjinniWish
+class WhoamiWish < Djinni::Wish
     def aliases
         return [ "whoami", "who" ]
     end

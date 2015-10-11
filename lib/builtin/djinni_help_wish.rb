@@ -1,6 +1,6 @@
 require "djinni"
 
-class DjinniHelpWish < DjinniWish
+class DjinniHelpWish < Djinni::Wish
     def aliases
         return [ "?", "help" ]
     end

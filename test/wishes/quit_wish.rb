@@ -1,6 +1,6 @@
 require "djinni"
 
-class Wish < DjinniWish
+class Wish < Djinni::Wish
     def aliases
         return [ "quit" ]
     end

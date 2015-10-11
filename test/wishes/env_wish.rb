@@ -1,7 +1,7 @@
 require "djinni"
 require "json"
 
-class EnvWish < DjinniWish
+class EnvWish < Djinni::Wish
     def aliases
         return [ "env" ]
     end

@@ -1,4 +1,4 @@
-class DjinniWish
+class Djinni::Wish
     class InterfaceNotImplementedError < NoMethodError
     end
 

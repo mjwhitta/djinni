@@ -1,6 +1,6 @@
 require "djinni"
 
-class ClearWish < DjinniWish
+class ClearWish < Djinni::Wish
     def aliases
         return [ "clear", "cls" ]
     end

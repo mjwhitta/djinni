@@ -1,12 +1,8 @@
-require "djinni_error"
-require "djinni_wish"
 require "io/console"
 require "pathname"
 require "terminfo"
 
 class Djinni
-    include DjinniError
-
     def grant_wish(input, djinni_env = {})
         return "" if (input.nil? || input.empty?)
 
@@ -136,7 +132,7 @@ class Djinni
         begin
             wish = Object::const_get(clas).new
         rescue NameError => e
-            raise DjinniError::UnknownWish.new(clas)
+            raise Djinni::UnknownWishError.new(clas)
         end
 
         return if (wish.nil?)
@@ -156,7 +152,7 @@ class Djinni
             require_relative file
 
             %x(
-                \grep -E "^ *class .+ \< DjinniWish" #{file} | \
+                \grep -E "^ *class .+ \< Djinni::Wish" #{file} | \
                     awk '{print $2}'
             ).each_line do |clas|
                 load_wish(clas)
@@ -211,3 +207,6 @@ class Djinni
     end
     private :store_history
 end
+
+require "djinni/error"
+require "djinni/wish"
