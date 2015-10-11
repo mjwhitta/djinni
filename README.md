@@ -96,6 +96,9 @@ class ListWish < Djinni::Wish
 end
 ```
 
+The `tab_complete` method is optional. If you choose not to implement
+it, the provided input will be returned as is.
+
 ## Links
 
 - [Homepage](http://mjwhitta.github.io/djinni)
