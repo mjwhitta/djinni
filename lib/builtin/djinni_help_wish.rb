@@ -6,7 +6,7 @@ class DjinniHelpWish < Djinni::Wish
     end
 
     def description
-        return "Show helpful information for a wish or wishes"
+        return "Show helpful information for a command or commands"
     end
 
     def execute(args, djinni_env = {})
