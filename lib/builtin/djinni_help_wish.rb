@@ -36,7 +36,7 @@ class DjinniHelpWish < Djinni::Wish
                     return
                 end
             end
-            puts "Wish #{args} not found!"
+            puts "Command #{args} not found!"
         else
             usage
         end
@@ -48,8 +48,8 @@ class DjinniHelpWish < Djinni::Wish
     end
 
     def usage
-        puts "help [wish]"
-        puts "\tPrint usage for specified wish. If no wish is"
-        puts "\tspecified, print description of all wishes."
+        puts "help [command]"
+        puts "\tPrint usage for specified command. If no command is"
+        puts "\tspecified, print description of all commands."
     end
 end

@@ -187,7 +187,7 @@ class Djinni
             buff = grant_wish(buff + STDIN.getch, djinni_env)
 
             if (buff.nil?)
-                puts "Wish not found!"
+                puts "Command not found!"
                 buff = ""
             end
 
