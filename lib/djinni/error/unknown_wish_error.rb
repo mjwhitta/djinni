@@ -1,6 +1,6 @@
 require "djinni/error.rb"
 
-class Djinni::UnknownWishError < Djinni::Error
+class Djinni::Error::UnknownWishError < Djinni::Error
     def initialize(clas = "")
         super("Unknown wish class #{clas}!")
     end

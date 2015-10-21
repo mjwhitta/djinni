@@ -132,7 +132,7 @@ class Djinni
         begin
             wish = Object::const_get(clas).new
         rescue NameError => e
-            raise Djinni::UnknownWishError.new(clas)
+            raise Error::UnknownWishError.new(clas)
         end
 
         return if (wish.nil?)
