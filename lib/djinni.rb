@@ -1,5 +1,5 @@
+require "fagin"
 require "io/console"
-require "pathname"
 require "terminfo"
 
 class Djinni
@@ -123,39 +123,13 @@ class Djinni
         load_wishes("#{File.dirname(__FILE__)}/djinni/wish")
     end
 
-    def load_wish(clas)
-        return if (clas.nil?)
-        clas.strip!
-        return if (clas.empty?)
-
-        wish = nil
-        begin
-            wish = Object::const_get(clas).new
-        rescue NameError => e
-            raise Error::UnknownWishError.new(clas)
-        end
-
-        return if (wish.nil?)
-
-        wish.aliases.each do |aliaz|
-            @wishes[aliaz] = wish
-        end
-    end
-    private :load_wish
-
     def load_wishes(dir)
         return if @loaded_from.include?(dir)
 
-        path = Pathname.new(dir).expand_path
-
-        Dir["#{path}/*.rb"].each do |file|
-            require_relative file
-
-            %x(
-                \grep -E "^ *class .+ \< Djinni::Wish" #{file} | \
-                    awk '{print $2}'
-            ).each_line do |clas|
-                load_wish(clas)
+        classes = Fagin.find_children("Djinni::Wish", dir)
+        classes.each do |clas, wish|
+            wish.aliases.each do |aliaz|
+                @wishes[aliaz] = wish
             end
         end
 

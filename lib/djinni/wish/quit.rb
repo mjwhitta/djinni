@@ -1,6 +1,6 @@
 require "djinni"
 
-class DjinniQuitWish < Djinni::Wish
+class Djinni::Wish::Quit < Djinni::Wish
     def aliases
         return [ "bye", "exit", "q", "quit" ]
     end
