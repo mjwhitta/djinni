@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name = "djinni"
-    s.version = "1.1.0"
+    s.version = "1.2.0"
     s.date = Time.new.strftime("%Y-%m-%d")
     s.summary = "A Ruby command handler"
     s.description =
@@ -13,5 +13,6 @@ Gem::Specification.new do |s|
     s.homepage = "http://mjwhitta.github.io/djinni"
     s.license = "GPL-3.0"
     s.add_development_dependency("minitest", "~> 5.8", ">= 5.8.1")
+    s.add_development_dependency("rake", "~> 10.4", ">= 10.4.2")
     s.add_runtime_dependency("ruby-terminfo", "~> 0.1", ">= 0.1.1")
 end

@@ -30,3 +30,7 @@ class Djinni::Wish
         )
     end
 end
+
+require "djinni/wish/djinni_help_wish"
+require "djinni/wish/djinni_history_wish"
+require "djinni/wish/djinni_quit_wish"

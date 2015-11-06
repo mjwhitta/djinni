@@ -120,7 +120,7 @@ class Djinni
             end
         )
 
-        load_wishes("#{File.dirname(__FILE__)}/builtin")
+        load_wishes("#{File.dirname(__FILE__)}/djinni/wish")
     end
 
     def load_wish(clas)
