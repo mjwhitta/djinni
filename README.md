@@ -108,5 +108,5 @@ it, the provided input will be returned as is.
 
 ## TODO
 
-- [ ] Left/Right arrow keys
-- [ ] RDoc
+- Left/Right arrow keys
+- RDoc
