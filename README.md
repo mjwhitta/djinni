@@ -8,6 +8,12 @@ This Ruby gem accepts user input and handles commands (a.k.a. wishes).
 It dynamically loads user-defined wishes, maintains a history, and
 provides tab completion.
 
+## How to install
+
+```bash
+$ gem install djinni
+```
+
 ## Example project
 
 ### Simple
