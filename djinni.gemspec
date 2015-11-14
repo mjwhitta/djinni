@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
     s.authors = [ "Miles Whittaker" ]
     s.email = "mjwhitta@gmail.com"
     s.files = Dir["lib/**/*.rb"]
-    s.homepage = "http://mjwhitta.github.io/djinni"
+    s.homepage = "https://mjwhitta.github.io/djinni"
     s.license = "GPL-3.0"
     s.add_development_dependency("minitest", "~> 5.8", ">= 5.8.1")
     s.add_development_dependency("rake", "~> 10.4", ">= 10.4.2")

@@ -107,7 +107,7 @@ it, the provided input will be returned as is.
 
 ## Links
 
-- [Homepage](http://mjwhitta.github.io/djinni)
+- [Homepage](https://mjwhitta.github.io/djinni)
 - [Source](https://gitlab.com/mjwhitta/djinni)
 - [Mirror](https://github.com/mjwhitta/djinni)
 - [RubyGems](https://rubygems.org/gems/djinni)
