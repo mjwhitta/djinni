@@ -160,12 +160,17 @@ class Djinni
             print "\r#{djinni_prompt}#{buff}"
 
             # Process input
-            begin
-                buff = grant_wish(buff + STDIN.getch, djinni_env)
-            rescue
-                puts if (@interactive)
-                return ""
+            input = nil
+            system("stty raw -echo")
+            while (input.nil?)
+                begin
+                    input = STDIN.getch
+                rescue
+                    puts if (@interactive)
+                end
             end
+            system("stty -raw echo")
+            buff = grant_wish(buff + input, djinni_env)
 
             if (buff.nil?)
                 puts "Command not found!"
