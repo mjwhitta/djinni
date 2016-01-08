@@ -71,9 +71,11 @@ class Djinni
             return nil
         when "\e" # Arrow keys
             code = "\e"
-            Thread.new do
+            t = Thread.new do
                 code += STDIN.getch + STDIN.getch
-            end.join(0.001).kill
+            end
+            t.join(0.001) if (t)
+            t.kill if (t)
 
             case code
             when "\e[A" # Up arrow
@@ -158,7 +160,12 @@ class Djinni
             print "\r#{djinni_prompt}#{buff}"
 
             # Process input
-            buff = grant_wish(buff + STDIN.getch, djinni_env)
+            begin
+                buff = grant_wish(buff + STDIN.getch, djinni_env)
+            rescue
+                puts if (@interactive)
+                return ""
+            end
 
             if (buff.nil?)
                 puts "Command not found!"
