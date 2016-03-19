@@ -30,6 +30,7 @@ class Djinni
                 wish = @wishes[name]
                 complete = ""
                 begin
+                    djinni_env["djinni_input"] = input
                     complete = wish.tab_complete(args, djinni_env)
                 rescue SystemExit => e
                     raise e
@@ -57,6 +58,7 @@ class Djinni
             @wishes.sort.map do |aliaz, wish|
                 if (aliaz == name)
                     begin
+                        djinni_env["djinni_input"] = input
                         wish.execute(args, djinni_env)
                     rescue SystemExit => e
                         raise e
@@ -142,14 +144,16 @@ class Djinni
         @interactive = true
 
         djinni_env["djinni_prompt"] = djinni_prompt
+        prev_len = 0
         buff = ""
         loop do
             djinni_prompt = djinni_env["djinni_prompt"]
             blank_line = Array.new(@width, " ").join
-            fill_len = @width - djinni_prompt.length - buff.length + 1
 
-            # Handle long line-wrapped prompts
-            lines = (djinni_prompt.length + buff.length) / @width
+            # Handle long lines that get wrapped
+            buff_len = remove_colors(djinni_prompt).length + prev_len
+            lines = buff_len / @width
+            lines -= 1 if ((buff_len % @width) == 0)
             lines.times do
                 print "\r#{blank_line}"
                 print "\e[F"
@@ -170,6 +174,7 @@ class Djinni
                 end
             end
             system("stty -raw echo")
+            prev_len = remove_colors(buff).length
             buff = grant_wish(buff + input, djinni_env)
 
             if (buff.nil?)
@@ -183,6 +188,11 @@ class Djinni
             end
         end
     end
+
+    def remove_colors(str)
+        str.unpack("C*").pack("U*").gsub(/\e\[([0-9;]*m|K)/, "")
+    end
+    private :remove_colors
 
     def store_history(input)
         # Only keep newest wish if repeat

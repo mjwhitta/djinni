@@ -2,7 +2,7 @@ require "djinni"
 
 class LSWish < Djinni::Wish
     def aliases
-        return [ "dir", "ls" ]
+        return [ "dir", "ll", "ls" ]
     end
 
     def description
@@ -10,7 +10,25 @@ class LSWish < Djinni::Wish
     end
 
     def execute(args, djinni_env = {})
-        puts %x(ls #{args})
+        # djinni_env["djinni"] - Djinni
+        #     Contains the calling djinni object
+        # djinni_env["djinni_history"] - Array
+        #     Contains previous wishes
+        # djinni_env["djinni_input"] - String
+        #     Contains which alias was used
+        # djinni_env["djinni_prompt"] - String
+        #     If Djinni.prompt was called, as opposed to
+        #     Djinni.grant_wish, then this contains the prompt string
+        #     presented to the user
+        # djinni_env["djinni_wishes"] - Hash
+        #     Contains available wishes
+        #
+        case djinni_env["djinni_input"]
+        when "ll"
+            puts %x(ls -hl #{args})
+        else
+            puts %x(ls #{args})
+        end
     end
 
     def tab_complete(input, djinni_env = {})

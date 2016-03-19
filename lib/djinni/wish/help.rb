@@ -1,5 +1,3 @@
-require "djinni"
-
 class Djinni::Wish::Help < Djinni::Wish
     def aliases
         return [ "?", "help" ]
