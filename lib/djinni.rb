@@ -80,13 +80,13 @@ class Djinni
             t.kill if (t)
 
             case code
-            when "\e[A" # Up arrow
+            when /\e[\[O]A/ # Up arrow
                 return "" if (@history.empty?)
                 @hist_index = @history.size if (@hist_index.nil?)
                 @hist_index = 1 if (@hist_index == 0)
                 @hist_index -= 1
                 return @history[@hist_index]
-            when "\e[B" # Down arrow
+            when /\e[\[O]B/ # Down arrow
                 @hist_index = @history.size if (@hist_index.nil?)
                 @hist_index += 1
                 if (@hist_index < @history.size)
@@ -95,10 +95,10 @@ class Djinni
                     @hist_index = @history.size
                     return ""
                 end
-            when "\e[C" # Right arrow
+            when /\e[\[O]C/ # Right arrow
                 # TODO maybe implement right arrow
                 return input[0..-2]
-            when "\e[D" # Left arrow
+            when /\e[\[O]D/ # Left arrow
                 # TODO maybe implement left arrow
                 return input[0..-2]
             else

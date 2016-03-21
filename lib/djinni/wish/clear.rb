@@ -1,6 +1,4 @@
-require "djinni"
-
-class ClearWish < Djinni::Wish
+class Djinni::Wish::Clear < Djinni::Wish
     def aliases
         return [ "clear", "cls" ]
     end
@@ -10,7 +8,11 @@ class ClearWish < Djinni::Wish
     end
 
     def execute(args, djinni_env = {})
-        system("clear")
+        if (args.nil? || args.empty?)
+            system("clear")
+        else
+            usage
+        end
     end
 
     def usage
