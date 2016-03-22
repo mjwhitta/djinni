@@ -27,47 +27,120 @@ class Djinni
                 name, args = input.split(" ", 2)
                 return input if (!@wishes.has_key?(name))
 
-                wish = @wishes[name]
-                complete = ""
                 begin
-                    djinni_env["djinni_input"] = input
-                    complete = wish.tab_complete(args, djinni_env)
+                    wish = @wishes[name]
+                    djinni_env["djinni_input"] = name
+                    completions, replace, append = wish.tab_complete(
+                        args,
+                        djinni_env
+                    )
                 rescue SystemExit => e
                     raise e
                 rescue Exception => e
                     puts
                     puts e.message
+                ensure
+                    append ||= " "
+                    completions ||= Hash.new
+                    replace ||= ""
                 end
-                return "#{name} #{complete}"
-            else
-                wishes = @wishes.keys
-                wishes.sort.each do |wish|
-                    if (wish.start_with?(input))
-                        return "#{wish} "
+
+                return input if (completions.empty?)
+
+                if (completions.length == 1)
+                    return input.gsub(
+                        /#{replace}$/,
+                        "#{completions.first.first}#{append}"
+                    )
+                end
+
+                puts
+                max = completions.keys.max_by(&:length).length
+                completions.each do |item, desc|
+                    fill = Array.new(max + 4 - item.length, " ").join
+                    nlfill = Array.new(max + 4, " ").join
+                    lines = desc.word_wrap(80 - (max + 4)).split("\n")
+
+                    if (lines.empty?)
+                        puts "#{item}"
+                    else
+                        start = lines.delete_at(0)
+                        puts "#{item}#{fill}#{start}"
+                        lines.each do |line|
+                            puts "#{nlfill}#{line}"
+                        end
                     end
                 end
-                return input
+
+                return input.gsub(
+                    /#{replace}$/,
+                    longest_common_substring(completions.keys)
+                )
+            else
+                wishes = @wishes.select do |aliaz, w|
+                    aliaz.start_with?(input)
+                end
+
+                return input if (wishes.empty?)
+
+                if (wishes.length == 1)
+                    return "#{wishes.first.first} "
+                end
+
+                puts
+                max = wishes.keys.max_by(&:length).length
+                wishes.sort do |a, b|
+                    a.first.downcase <=> b.first.downcase
+                end.each do |aliaz, w|
+                    fill = Array.new(max + 4 - aliaz.length, " ").join
+                    nlfill = Array.new(max + 4, " ").join
+                    lines = w.description.word_wrap(
+                        80 - (max + 4)
+                    ).split("\n")
+
+                    if (lines.empty?)
+                        puts "#{aliaz}"
+                    else
+                        start = lines.delete_at(0)
+                        puts "#{aliaz}#{fill}#{start}"
+                        lines.each do |line|
+                            puts "#{nlfill}#{line}"
+                        end
+                    end
+                end
+
+                return longest_common_substring(wishes.keys)
             end
         when /\r|\n/ # Enter
             input.strip!
             puts if (@interactive)
             return "" if (input.empty?)
 
+            # "".split(" ", 2) => [] aka [nil, nil]
+            # " ".split(" ", 2) => [""] aka ["", nil]
+            # The above 2 would return before getting here
+            # "string".split(" ", 2) => ["string"] aka ["string", nil]
+            # "string ".split(" ", 2) => ["string", ""]
             name, args = input.split(" ", 2)
+            args ||= ""
 
-            @wishes.sort.map do |aliaz, wish|
-                if (aliaz == name)
-                    begin
-                        djinni_env["djinni_input"] = input
-                        wish.execute(args, djinni_env)
-                    rescue SystemExit => e
-                        raise e
-                    rescue Exception => e
-                        puts e.message
-                    end
-                    store_history(input)
-                    return ""
+            @wishes.select do |aliaz, w|
+                aliaz == name
+            end.each do |aliaz, w|
+                begin
+                    djinni_env["djinni_input"] = name
+                    w.execute(args, djinni_env)
+                rescue SystemExit => e
+                    raise e
+                rescue Exception => e
+                    puts e.message
                 end
+
+                if (w.class.to_s != "Djinni::Wish::History")
+                    store_history(input)
+                end
+
+                return ""
             end
             store_history(input)
             return nil
@@ -139,6 +212,20 @@ class Djinni
 
         @loaded_from.push(dir)
     end
+
+    def longest_common_substring(array)
+        compare = array.min_by(&:length)
+        loop do
+            break if (compare.empty?)
+            all = array.all? do |item|
+                item.downcase.start_with?(compare.downcase)
+            end
+            compare = compare[0..-2] if (!all)
+            break if (all)
+        end
+        return compare
+    end
+    private :longest_common_substring
 
     def prompt(djinni_env = {}, djinni_prompt = "$ ")
         @interactive = true

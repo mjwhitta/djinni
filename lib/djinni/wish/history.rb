@@ -1,6 +1,8 @@
+require "string"
+
 class Djinni::Wish::History < Djinni::Wish
     def aliases
-        return [ "hist", "history" ]
+        return ["hist", "history"]
     end
 
     def description
@@ -11,56 +13,69 @@ class Djinni::Wish::History < Djinni::Wish
         djinni = djinni_env["djinni"]
         history = djinni_env["djinni_history"]
 
-        case args
-        when nil, ""
-            history.each_index do |index|
-                puts "#{index}:\t#{history[index]}"
+        if (args.empty?)
+            history.each_with_index do |hist, index|
+                puts "#{index}:    #{hist}"
             end
-        when "clear"
-            history.clear
-        when %r{^[0-9]+( [0-9]+)*$}
-            args.split(" ").each do |arg|
+            return
+        end
+
+        args.split(" ").each do |arg|
+            case arg
+            when "clear"
+                # Do nothing
+            when /^[0-9]+$/
                 index = arg.to_i
-                if ((index >= 0) && (index < history.length))
-                    djinni.grant_wish(
-                        "#{history[index]}\n",
-                        djinni_env
-                    )
-                else
-                    puts "Index out of bounds"
+                if ((index < 0) || (index >= history.length))
+                    puts "Index out of bounds; #{index}"
                 end
+            else
+                usage
+                return
             end
-        else
-            usage
+        end
+
+        args.split(" ").each do |arg|
+            case arg
+            when "clear"
+                history.clear
+            when /^[0-9]+$/
+                index = arg.to_i
+                print "\e[F"
+                djinni.grant_wish("#{history[index]}\n", djinni_env)
+            end
         end
     end
 
     def tab_complete(input, djinni_env = {})
         history = djinni_env["djinni_history"]
-
+        input, last = input.rsplit(" ")
         included = input.split(" ")
-        completions = (0...history.length).to_a
 
-        included.each do |item|
-            completions.delete(item.to_i)
+        completions = Hash.new
+        (0...history.length).each do |i|
+            completions[i.to_s] = history[i]
+        end
+        completions["clear"] = "Clear history"
+
+        completions.keep_if do |item, desc|
+            !included.include?(item)
         end
 
-        if (input.empty? || input.end_with?(" "))
-            puts
-            completions.sort.each do |index|
-                puts "#{index}:\t#{history[index]}"
+        if (last && !last.empty?)
+            completions.keep_if do |item, desc|
+                item.downcase.start_with?(last.downcase)
             end
-            return input
         end
 
-        return "#{input} "
+        return [completions, last, " "]
     end
 
     def usage
         puts "history [option]"
-        puts "\t#{description}."
-        puts "\tOPTIONS"
-        puts "\t\t[0-9]+\tExecute command from history"
-        puts "\t\tclear\tClear history"
+        puts "    #{description}."
+        puts "    OPTIONS"
+        puts "        [0-9]+    Execute command from history"
+        puts "        clear     Clear history"
     end
 end

@@ -2,7 +2,7 @@ require "djinni"
 
 class QuitWish < Djinni::Wish
     def aliases
-        return [ "quit" ]
+        return ["quit"]
     end
 
     def description
@@ -15,6 +15,6 @@ class QuitWish < Djinni::Wish
 
     def usage
         puts aliases.join(", ")
-        puts "\t#{description}."
+        puts "    #{description}."
     end
 end

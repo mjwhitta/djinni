@@ -21,7 +21,7 @@ class Djinni::Wish
     end
 
     def tab_complete(input, djinni_env = {})
-        return input
+        return [{}, "", ""]
     end
 
     def usage

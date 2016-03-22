@@ -1,6 +1,6 @@
 class Djinni::Wish::Help < Djinni::Wish
     def aliases
-        return [ "?", "help" ]
+        return ["?", "help"]
     end
 
     def description
@@ -8,27 +8,22 @@ class Djinni::Wish::Help < Djinni::Wish
     end
 
     def execute(args, djinni_env = {})
-        wishes = djinni_env["djinni_wishes"].sort
-        if (args.nil? || args.empty?)
-            cmd_col_width = 0
-            wishes.map do |aliaz, wish|
-                if (aliaz.length > cmd_col_width)
-                    cmd_col_width = aliaz.length
-                end
-            end
-
-            filler = Array.new(cmd_col_width - 7 + 4, " ").join
-            puts "COMMAND#{filler}DESCRIPTION"
-            puts "-------#{filler}-----------"
-            wishes.map do |aliaz, wish|
-                filler = Array.new(
-                    cmd_col_width - aliaz.length + 4,
-                    " "
-                ).join
-                puts "#{aliaz}#{filler}#{wish.description}"
+        wishes = djinni_env["djinni_wishes"]
+        max = wishes.keys.max_by(&:length).length
+        if (args.empty?)
+            fill = Array.new(max - 7 + 4, " ").join
+            puts "COMMAND#{fill}DESCRIPTION"
+            puts "-------#{fill}-----------"
+            wishes.sort do |a, b|
+                a.first.downcase <=> b.first.downcase
+            end.each do |aliaz, wish|
+                fill = Array.new(max - aliaz.length + 4, " ").join
+                puts "#{aliaz}#{fill}#{wish.description}"
             end
         elsif (args.split(" ").length == 1)
-            wishes.map do |aliaz, wish|
+            wishes.sort do |a, b|
+                a.first.downcase <=> b.first.downcase
+            end.each do |aliaz, wish|
                 if (aliaz == args)
                     wish.usage
                     return
@@ -41,13 +36,23 @@ class Djinni::Wish::Help < Djinni::Wish
     end
 
     def tab_complete(input, djinni_env = {})
-        # TODO
-        return input
+        return [{}, "", " "] if (input.include?(" "))
+
+        completions = Hash.new
+        djinni_env["djinni_wishes"].select do |aliaz, wish|
+            aliaz.downcase.start_with?(input.downcase)
+        end.sort do |a, b|
+            a.first.downcase <=> b.first.downcase
+        end.each do |aliaz, wish|
+            completions[aliaz] = wish.description
+        end
+
+        return [completions, input, " "]
     end
 
     def usage
         puts "help [command]"
-        puts "\tPrint usage for specified command. If no command is"
-        puts "\tspecified, print description of all commands."
+        puts "    Print usage for specified command. If no command is"
+        puts "    specified, print description of all commands."
     end
 end

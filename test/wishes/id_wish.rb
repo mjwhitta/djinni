@@ -2,7 +2,7 @@ require "djinni"
 
 class IDWish < Djinni::Wish
     def aliases
-        return [ "id", "me" ]
+        return ["id", "ID", "me"]
     end
 
     def description
@@ -15,7 +15,7 @@ class IDWish < Djinni::Wish
 
     def usage
         puts aliases.join(", ")
-        puts "\t#{description}."
+        puts "    #{description}."
     end
 end
 
@@ -34,6 +34,6 @@ class WhoamiWish < Djinni::Wish
 
     def usage
         puts aliases.join(", ")
-        puts "\t#{description}."
+        puts "    #{description}."
     end
 end

@@ -3,7 +3,7 @@ require "json"
 
 class EnvWish < Djinni::Wish
     def aliases
-        return [ "env" ]
+        return ["env", "ENV"]
     end
 
     def description
@@ -16,6 +16,6 @@ class EnvWish < Djinni::Wish
 
     def usage
         puts "#{aliases.join(", ")}"
-        puts "\t#{description}."
+        puts "    #{description}."
     end
 end

@@ -1,6 +1,6 @@
 class Djinni::Wish::Clear < Djinni::Wish
     def aliases
-        return [ "clear", "cls" ]
+        return ["clear", "cls"]
     end
 
     def description
@@ -8,15 +8,12 @@ class Djinni::Wish::Clear < Djinni::Wish
     end
 
     def execute(args, djinni_env = {})
-        if (args.nil? || args.empty?)
-            system("clear")
-        else
-            usage
-        end
+        system("clear") if (args.empty?)
+        usage if (!args.empty?)
     end
 
     def usage
         puts aliases.join(", ")
-        puts "\t#{description}."
+        puts "    #{description}."
     end
 end

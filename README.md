@@ -89,39 +89,67 @@ class ListWish < Djinni::Wish
     end
 
     def tab_complete(input, djinni_env = {})
+        # djinni_env["djinni"] - Djinni
+        #     Contains the calling djinni object
+        # djinni_env["djinni_history"] - Array
+        #     Contains previous wishes
+        # djinni_env["djinni_input"] - String
+        #     Contains which alias was used
+        # djinni_env["djinni_prompt"] - String
+        #     If Djinni.prompt was called, as opposed to
+        #     Djinni.grant_wish, then this contains the prompt string
+        #     presented to the user
+        # djinni_env["djinni_wishes"] - Hash
+        #     Contains available wishes
+
+        # This function should do something like this:
+        # completions = Hash.new
+        # replace = "string to replace"
+        # append = "string to append"
+        # return [completions, replace, append]
+
+        # Default behavior:
+        # return [{}, "", ""]
+
         included = input.split(" ")
-        completions = Dir["*"].delete_if do |item|
-            included.include?(item)
-        end.sort
-        completions.insert(0, "-l")
+        last = included.delete_at(-1) if (!input.end_with?(" "))
+        completions = Hash.new
 
-        if (input.empty? || input.end_with?(" "))
-            puts
-            puts completions.sort
-            return input
-        end
-
-        completions.each do |item|
-            if (item.downcase.start_with?(included[-1].downcase))
-                included[-1] = item
-                return included.join(" ")
+        if (djinni_env["djinni_input"] != "ll")
+            if (!included.include?("-l"))
+                completions["-l"] = "Use a long listing format"
             end
         end
 
-        puts
-        puts completions
-        return input
+        # This is only an example so only complete current directory
+        Dir["*"].select do |item|
+            !included.include?(item)
+        end.sort do |a, b|
+            a.downcase <=> b.downcase
+        end.each do |item|
+            completions[item] = %x(
+                \ls -dhl #{item} | awk '{print $1,$3,$4,$5,$6,$7,$8}'
+            )
+        end
+
+        if (last)
+            completions.keep_if do |item, desc|
+                item.downcase.start_with?(last.downcase)
+            end
+        end
+
+        return [completions, last, " "]
     end
 
     def usage
         puts "#{aliases.join(", ")} [-l] [dir1/file1]..[dirN/fileN]"
-        puts "\t#{description}."
+        puts "    #{description}."
     end
 end
 ```
 
 The `tab_complete` method is optional. If you choose not to implement
-it, the provided input will be returned as is.
+it, the provided input will not be altered.
 
 ## Links
 
@@ -132,5 +160,6 @@ it, the provided input will be returned as is.
 
 ## TODO
 
+- Implement modes and mode switching
 - Left/Right arrow keys
 - RDoc
