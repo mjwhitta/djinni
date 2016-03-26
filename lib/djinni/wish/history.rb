@@ -1,5 +1,3 @@
-require "string"
-
 class Djinni::Wish::History < Djinni::Wish
     def aliases
         return ["hist", "history"]
@@ -49,7 +47,7 @@ class Djinni::Wish::History < Djinni::Wish
 
     def tab_complete(input, djinni_env = {})
         history = djinni_env["djinni_history"]
-        input, last = input.rsplit(" ")
+        input, found, last = input.rpartition(" ")
         included = input.split(" ")
 
         completions = Hash.new
@@ -62,7 +60,7 @@ class Djinni::Wish::History < Djinni::Wish
             !included.include?(item)
         end
 
-        if (last && !last.empty?)
+        if (!last.empty?)
             completions.keep_if do |item, desc|
                 item.downcase.start_with?(last.downcase)
             end

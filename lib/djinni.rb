@@ -59,7 +59,9 @@ class Djinni
                 completions.each do |item, desc|
                     fill = Array.new(max + 4 - item.length, " ").join
                     nlfill = Array.new(max + 4, " ").join
-                    lines = desc.word_wrap(80 - (max + 4)).split("\n")
+                    lines = desc.scan(
+                        /\S.{0,#{80 - (max + 4)}}\S(?=\s|$)|\S+/
+                    )
 
                     if (lines.empty?)
                         puts "#{item}"
@@ -94,9 +96,9 @@ class Djinni
                 end.each do |aliaz, w|
                     fill = Array.new(max + 4 - aliaz.length, " ").join
                     nlfill = Array.new(max + 4, " ").join
-                    lines = w.description.word_wrap(
-                        80 - (max + 4)
-                    ).split("\n")
+                    lines = w.description.scan(
+                        /\S.{0,#{80 - (max + 4)}}\S(?=\s|$)|\S+/
+                    )
 
                     if (lines.empty?)
                         puts "#{aliaz}"

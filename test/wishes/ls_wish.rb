@@ -1,5 +1,4 @@
 require "djinni"
-require "string"
 
 class LSWish < Djinni::Wish
     def aliases
@@ -46,7 +45,7 @@ class LSWish < Djinni::Wish
         # djinni_env["djinni_wishes"] - Hash
         #     Contains available wishes
 
-        input, last = input.rsplit(" ")
+        input, found, last = input.rpartition(" ")
         included = input.split(" ")
         completions = Hash.new
 
@@ -67,7 +66,7 @@ class LSWish < Djinni::Wish
             )
         end
 
-        if (last && !last.empty?)
+        if (!last.empty?)
             completions.keep_if do |item, desc|
                 item.downcase.start_with?(last.downcase)
             end
