@@ -16,7 +16,7 @@ class Djinni
             return ""
         when "\x04" # ^D
             return "\x04"
-        when "\x7F" # Backspace
+        when "\x7F", "\b" # Backspace or ^H
             return input[0..-3]
         when "\f" # ^L
             system("clear") if (@interactive)
@@ -207,8 +207,9 @@ class Djinni
 
         classes = Fagin.find_children("Djinni::Wish", dir)
         classes.each do |clas, wish|
-            wish.aliases.each do |aliaz|
-                @wishes[aliaz] = wish
+            w = wish.new
+            w.aliases.each do |aliaz|
+                @wishes[aliaz] = w
             end
         end
 
