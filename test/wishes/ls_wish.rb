@@ -45,7 +45,7 @@ class LSWish < Djinni::Wish
         # djinni_env["djinni_wishes"] - Hash
         #     Contains available wishes
 
-        input, found, last = input.rpartition(" ")
+        input, _, last = input.rpartition(" ")
         included = input.split(" ")
         completions = Hash.new
 

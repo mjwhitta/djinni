@@ -190,12 +190,12 @@ class Djinni
         @hist_index = nil
         @interactive = interactive
         @loaded_from = Array.new
-        @width = TermInfo.screen_size[1]
+        @width = %x(tput cols).to_i
 
         Signal.trap(
             "SIGWINCH",
             proc do
-                @width = TermInfo.screen_size[1]
+                @width = %x(tput cols).to_i
             end
         )
 
