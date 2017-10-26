@@ -1,6 +1,5 @@
 require "fagin"
 require "io/console"
-require "terminfo"
 
 class Djinni
     def grant_wish(input, djinni_env = {})
