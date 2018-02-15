@@ -10,7 +10,7 @@ provides tab completion.
 
 ## How to install
 
-```bash
+```
 $ gem install djinni
 ```
 
@@ -153,7 +153,6 @@ it, the provided input will not be altered.
 
 ## Links
 
-- [Homepage](https://mjwhitta.github.io/djinni)
 - [Source](https://gitlab.com/mjwhitta/djinni)
 - [Mirror](https://github.com/mjwhitta/djinni)
 - [RubyGems](https://rubygems.org/gems/djinni)
