@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name = "djinni"
-    s.version = "2.1.1"
+    s.version = "2.1.2"
     s.date = Time.new.strftime("%Y-%m-%d")
     s.summary = "A Ruby command handler"
     s.description =
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
     s.files = Dir["lib/**/*.rb"]
     s.homepage = "https://mjwhitta.github.io/djinni"
     s.license = "GPL-3.0"
-    s.add_development_dependency("minitest", "~> 5.8", ">= 5.8.4")
-    s.add_development_dependency("rake", "~> 10.5", ">= 10.5.0")
-    s.add_runtime_dependency("fagin", "~> 1.0", ">= 1.0.0")
+    s.add_development_dependency("minitest", "~> 5.11", ">= 5.11.3")
+    s.add_development_dependency("rake", "~> 12.3", ">= 12.3.0")
+    s.add_runtime_dependency("fagin", "~> 1.0", ">= 1.0.3")
 end
