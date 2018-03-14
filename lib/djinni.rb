@@ -2,6 +2,8 @@ require "fagin"
 require "io/console"
 
 class Djinni
+    attr_accessor :fallback
+
     def grant_wish(input, djinni_env = {})
         return "" if (input.nil? || input.empty?)
 
@@ -184,12 +186,13 @@ class Djinni
     end
 
     def initialize(interactive = false)
-        @wishes = Hash.new
-        @history = Array.new
+        @fallback = nil
         @hist_index = nil
+        @history = Array.new
         @interactive = interactive
         @loaded_from = Array.new
         @width = %x(tput cols).to_i
+        @wishes = Hash.new
 
         Signal.trap(
             "SIGWINCH",
@@ -264,7 +267,15 @@ class Djinni
             end
             system("stty -raw echo")
             prev_len = remove_colors(buff).length
+            save = buff
             buff = grant_wish(buff + input, djinni_env)
+
+            if (buff.nil? && !@fallback.nil? && !@fallback.empty?)
+                puts "\e[2A"
+                buff = grant_wish(
+                    @fallback + " " + save + input, djinni_env
+                )
+            end
 
             if (buff.nil?)
                 puts "Command not found!"
