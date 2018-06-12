@@ -60,9 +60,12 @@ class Djinni
                 completions.each do |item, desc|
                     fill = Array.new(max + 4 - item.length, " ").join
                     nlfill = Array.new(max + 4, " ").join
-                    lines = desc.scan(
-                        /\S.{0,#{80 - (max + 4)}}\S(?=\s|$)|\S+/
-                    )
+                    lines = ""
+                    if (desc)
+                        lines = desc.scan(
+                            /\S.{0,#{80 - (max + 4)}}\S(?=\s|$)|\S+/
+                        )
+                    end
 
                     if (lines.empty?)
                         puts "#{item}"

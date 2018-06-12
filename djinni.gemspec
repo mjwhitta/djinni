@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name = "djinni"
-    s.version = "2.2.1"
+    s.version = "2.2.2"
     s.date = Time.new.strftime("%Y-%m-%d")
     s.summary = "A Ruby command handler"
     s.description =
