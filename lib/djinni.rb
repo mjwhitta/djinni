@@ -10,6 +10,7 @@ class Djinni
         djinni_env["djinni"] = self
         djinni_env["djinni_history"] = @history
         djinni_env["djinni_wishes"] = @wishes
+        space = 4
 
         case input[-1]
         when "\x03" # ^C
@@ -55,15 +56,17 @@ class Djinni
                     )
                 end
 
-                puts
                 max = completions.keys.max_by(&:length).length
+                width = @width - (max + space) - 2
+
+                puts
                 completions.each do |item, desc|
-                    fill = Array.new(max + 4 - item.length, " ").join
-                    nlfill = Array.new(max + 4, " ").join
+                    fill = " " * (max + space - item.length)
                     lines = ""
+                    nlfill = " " * (max + space)
                     if (desc)
                         lines = desc.scan(
-                            /\S.{0,#{80 - (max + 4)}}\S(?=\s|$)|\S+/
+                            /\S.{0,#{width}}\S(?=\s|$)|\S+/
                         )
                     end
 
@@ -93,16 +96,18 @@ class Djinni
                     return "#{wishes.first.first} "
                 end
 
-                puts
                 max = wishes.keys.max_by(&:length).length
+                width = @width - (max + space) - 2
+
+                puts
                 wishes.sort do |a, b|
                     a.first.downcase <=> b.first.downcase
                 end.each do |aliaz, w|
-                    fill = Array.new(max + 4 - aliaz.length, " ").join
-                    nlfill = Array.new(max + 4, " ").join
+                    fill = " " * (max + space - aliaz.length)
                     lines = w.description.scan(
-                        /\S.{0,#{80 - (max + 4)}}\S(?=\s|$)|\S+/
+                        /\S.{0,#{width}}\S(?=\s|$)|\S+/
                     )
+                    nlfill = " " * (max + space)
 
                     if (lines.empty?)
                         puts "#{aliaz}"
@@ -198,7 +203,7 @@ class Djinni
         @wishes = Hash.new
 
         Signal.trap(
-            "SIGWINCH",
+            "WINCH",
             proc do
                 @width = %x(tput cols).to_i
             end
@@ -243,7 +248,7 @@ class Djinni
         buff = ""
         loop do
             djinni_prompt = djinni_env["djinni_prompt"]
-            blank_line = Array.new(@width, " ").join
+            blank_line = " " * @width
 
             # Handle long lines that get wrapped
             buff_len = remove_colors(djinni_prompt).length + prev_len
