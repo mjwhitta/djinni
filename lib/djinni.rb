@@ -57,21 +57,23 @@ class Djinni
                 end
 
                 max = completions.keys.max_by(&:length).length
+                nlfill = ""
+                nlfill = " " * (max + space) if ((max + space) > 0)
                 width = @width - (max + space) - 2
 
                 puts
                 completions.each do |item, desc|
-                    fill = " " * (max + space - item.length)
-                    lines = ""
-                    nlfill = " " * (max + space)
-                    if (desc)
-                        lines = desc.scan(
-                            /\S.{0,#{width}}\S(?=\s|$)|\S+/
-                        )
+                    desc ||= ""
+                    fill = ""
+                    if ((max + space - item.length) > 0)
+                        fill = " " * (max + space - item.length)
                     end
+                    lines = desc.scan(
+                        /\S.{0,#{width}}\S(?=\s|$)|\S+/
+                    )
 
                     if (lines.empty?)
-                        puts "#{item}"
+                        puts item
                     else
                         start = lines.delete_at(0)
                         puts "#{item}#{fill}#{start}"
@@ -81,10 +83,9 @@ class Djinni
                     end
                 end
 
-                return input.gsub(
-                    /#{replace}$/,
-                    longest_common_substring(completions.keys)
-                )
+                longest = longest_common_substring(completions.keys)
+                return input if (longest.empty?)
+                return input.gsub(/#{replace}$/, longest)
             else
                 wishes = @wishes.select do |aliaz, w|
                     aliaz.start_with?(input)
@@ -97,20 +98,24 @@ class Djinni
                 end
 
                 max = wishes.keys.max_by(&:length).length
+                nlfill = ""
+                nlfill = " " * (max + space) if ((max + space) > 0)
                 width = @width - (max + space) - 2
 
                 puts
                 wishes.sort do |a, b|
                     a.first.downcase <=> b.first.downcase
                 end.each do |aliaz, w|
-                    fill = " " * (max + space - aliaz.length)
+                    fill = ""
+                    if ((max + space - aliaz.length) > 0)
+                        fill = " " * (max + space - aliaz.length)
+                    end
                     lines = w.description.scan(
                         /\S.{0,#{width}}\S(?=\s|$)|\S+/
                     )
-                    nlfill = " " * (max + space)
 
                     if (lines.empty?)
-                        puts "#{aliaz}"
+                        puts aliaz
                     else
                         start = lines.delete_at(0)
                         puts "#{aliaz}#{fill}#{start}"
@@ -228,6 +233,7 @@ class Djinni
 
     def longest_common_substring(array)
         compare = array.min_by(&:length)
+        compare ||= ""
         loop do
             break if (compare.empty?)
             all = array.all? do |item|
@@ -248,7 +254,8 @@ class Djinni
         buff = ""
         loop do
             djinni_prompt = djinni_env["djinni_prompt"]
-            blank_line = " " * @width
+            blank_line = ""
+            blank_line = " " * @width if (@width > 0)
 
             # Handle long lines that get wrapped
             buff_len = remove_colors(djinni_prompt).length + prev_len
