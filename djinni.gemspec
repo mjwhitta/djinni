@@ -13,6 +13,6 @@ Gem::Specification.new do |s|
     s.homepage = "https://gitlab.com/mjwhitta/djinni"
     s.license = "GPL-3.0"
     s.add_development_dependency("minitest", "~> 5.11", ">= 5.11.3")
-    s.add_development_dependency("rake", "~> 12.3", ">= 12.3.0")
+    s.add_development_dependency("rake", "~> 12.3", ">= 12.3.2")
     s.add_runtime_dependency("fagin", "~> 1.2", ">= 1.2.1")
 end
