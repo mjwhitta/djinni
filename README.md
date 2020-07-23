@@ -1,5 +1,7 @@
 # Djinni
 
+<a href="https://www.buymeacoffee.com/mjwhitta">🍪 Buy me a cookie</a>
+
 Your wish is my command
 
 ## What is this?
