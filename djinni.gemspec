@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
     ].join(" ")
     s.email = "mj@whitta.dev"
     s.files = Dir["lib/**/*.rb"]
-    s.homepage = "https://gitlab.com/mjwhitta/djinni"
+    s.homepage = "https://github.com/mjwhitta/djinni"
     s.license = "GPL-3.0"
     s.metadata = {"source_code_uri" => s.homepage}
     s.name = "djinni"

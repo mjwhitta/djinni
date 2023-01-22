@@ -155,7 +155,7 @@ it, the provided input will not be altered.
 
 ## Links
 
-- [Source](https://gitlab.com/mjwhitta/djinni)
+- [Source](https://github.com/mjwhitta/djinni)
 - [RubyGems](https://rubygems.org/gems/djinni)
 
 ## TODO
